@@ -68,7 +68,7 @@ function love.update(dt)
        checkCollision(ball.x, ball.y, ball.size, ball.size, player2.x2, player2.y2, 20, 50) then
         ball.speed = -ball.speed
     end
-    ball.x = ball.x + ball.speed * dt
+    --ball.x = ball.x + ball.speed * dt
     check_score()
 end
 
