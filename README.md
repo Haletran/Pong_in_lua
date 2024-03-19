@@ -4,3 +4,16 @@
 <img align="center" src="screenshot.png"></img>
 
 
+# Compilation
+
+You need the Love2d library package installed :
+
+```bash
+love game/
+```
+
+or use the [AppImage](https://github.com/love2d/love/releases/download/11.5/love-11.5-x86_64.AppImage) :
+
+```bash
+./love-11.5-x86_64.AppImage game/
+```
