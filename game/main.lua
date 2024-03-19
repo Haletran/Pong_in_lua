@@ -19,8 +19,8 @@ function love.load()
         x = 400,
         y = 300,
         size = 10,
-        speed_x = 300,
-        speed_y = 300,
+        speed_x = 200,
+        speed_y = 200,
     }
     pong = love.audio.newSource("sound/ping.mp3", "static")
     success = love.audio.newSource("sound/score.mp3", "static")
@@ -37,14 +37,9 @@ function checkCollisionRectCircle(rx, ry, rw, rh, cx, cy, cr)
 end
 
 function clamp(value, min, max)
-    if value < min then
-        return min
-    elseif value > max then
-        return max
-    else
-        return value
-    end
+    return math.max(min, math.min(value, max))
 end
+
 
 
 function movePlayer1(dt)
@@ -65,19 +60,24 @@ function movePlayer2(dt)
     end
 end
 
-function check_score()
-    if ball.x < 40 then
-        success:play()
-        player.score  = player.score + 1
-        ball.x = 400
-        ball.y = 300
-    elseif ball.x > love.graphics.getWidth() - ball.size - 30 then
-        success:play()
-        player2.score = player2.score + 1
-        ball.x = 400
-        ball.y = 300
-    end
+function resetBall()
+    ball.x = 400
+    ball.y = 300
+    ball.speed_x = 300
+    ball.speed_y = 300
+end
 
+function check_score()
+    if ball.x < 20 or ball.x > love.graphics.getWidth() - ball.size - 30 then
+        resetBall()
+        if ball.x < 20 then
+            success:play()
+            player2.score = player2.score + 1
+        else
+            success:play()
+            player.score = player.score + 1
+        end
+    end
 end
 
 
@@ -103,13 +103,12 @@ function love.update(dt)
     if checkCollisionRectCircle(player.x, player.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) or
     checkCollisionRectCircle(player2.x, player2.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) then
         pong:play()
-        ball.speed_x = -ball.speed_x
+        ball.speed_x = -ball.speed_x * 1.1
     end
 
     if ball.y < 21 or ball.y > love.graphics.getHeight() - ball.size - 31 then
         pong:play()
-
-        ball.speed_y = -ball.speed_y
+        ball.speed_y = -ball.speed_y * 1.1
     end
 
     ball.x = ball.x + ball.speed_x * dt
