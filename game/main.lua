@@ -66,7 +66,7 @@ function movePlayer2(dt)
 end
 
 function check_score()
-    if ball.x < 0 then 
+    if ball.x < 60 then 
         success:play()
         player.score  = player.score + 1
         ball.x = 400
@@ -83,15 +83,8 @@ function check_score()
     end
 end
 
-function check_button(x, y)
-    if x == 5  and y == 700 then
-        check = 1
-    end
-end
 
 function love.update(dt)
-    local mouse_x, mouse_y = love.mouse.getPosition()
-    check_button(mouse_x, mouse_y)
     movePlayer1(dt)
     --movePlayer2(dt)
     if love.keyboard.isDown("w") then
