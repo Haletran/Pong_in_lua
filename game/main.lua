@@ -64,7 +64,7 @@ end
 function love.update(dt)
 
     movePlayer1(dt)
-   movePlayer2(dt)
+    -- movePlayer2(dt)
     if love.keyboard.isDown("w") then
         player2.y2 = math.max(player2.y2 - player2.speed * dt, 20)
     elseif love.keyboard.isDown("s") then
