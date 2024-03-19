@@ -1,7 +1,9 @@
 <h1 align="center">Simple Pong</h1>
 
-<p align="center">Basic pong game designed to learn the fundamentals of LUA and the  <a href="the Love 2D library.">Love 2D</a> library.</p>
+<p align="center">Basic pong game designed to learn the fundamentals of LUA and the  <a href="the Love 2D library.">Love 2D</a> library. <br> => Try it here <a href"https://haletran.github.io/Pong_in_lua/">PONG</a> <=</p>
+
 <img align="center" src="screenshott.png"></img>
+
 
 
 # Compilation
