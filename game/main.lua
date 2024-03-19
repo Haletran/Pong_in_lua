@@ -1,3 +1,5 @@
+require("menu")
+
 function love.load()
     player = {
         x = 730,
@@ -7,8 +9,8 @@ function love.load()
         score = 0
     }
     player2 = {
-        x2 = 50,
-        y2 = 100,
+        x = 50,
+        y = 100,
         size = 25,
         speed = 400,
         score = 0
@@ -26,10 +28,10 @@ function love.load()
 end
 
 function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
-    return x1 < x2 + w2 and
-           x2 < x1 + w1 and
-           y1 < y2 + h2 and
-           y2 < y1 + h1
+    return x1 < x2 + w2 - 1 and
+           x2 < x1 + w1 - 1 and
+           y1 < y2 + h2 - 1 and
+           y2 < y1 + h1 - 1
 end
 
 function movePlayer1(dt)
@@ -41,10 +43,10 @@ function movePlayer1(dt)
 end
 
 function movePlayer2(dt)
-    if ball.y < player2.y2 then
-        player2.y2 = math.max(player2.y2 - player2.speed * dt, 20)
-    elseif ball.y > player2.y2 then
-        player2.y2 = math.min(player2.y2 + player2.speed * dt, love.graphics.getHeight() - 80)
+    if ball.y < player2.y then
+        player2.y = math.max(player2.y - player2.speed * dt, 20)
+    elseif ball.y > player2.y then
+        player2.y = math.min(player2.y + player2.speed * dt, love.graphics.getHeight() - 80)
     end
 end
 
@@ -70,9 +72,9 @@ function love.update(dt)
     movePlayer1(dt)
     --movePlayer2(dt)
     if love.keyboard.isDown("w") then
-        player2.y2 = math.max(player2.y2 - player2.speed * dt, 20)
+        player2.y = math.max(player2.y - player2.speed * dt, 20)
     elseif love.keyboard.isDown("s") then
-        player2.y2 = math.min(player2.y2 + player2.speed * dt, love.graphics.getHeight() - 80)
+        player2.y = math.min(player2.y + player2.speed * dt, love.graphics.getHeight() - 80)
     end
 
     if love.keyboard.isDown("r") then
@@ -92,27 +94,27 @@ function love.update(dt)
     end
 
     if checkCollision(ball.x, ball.y, ball.size, ball.size, player.x, player.y, 20, 50) or
-       checkCollision(ball.x, ball.y, ball.size, ball.size, player2.x2, player2.y2, 20, 50) then
+       checkCollision(ball.x, ball.y, ball.size, ball.size, player2.x, player2.y, 20, 50) then
         pong:play()
         ball.speed_x = -ball.speed_x - 1
     end
 
     ball.x = ball.x + ball.speed_x * dt
     ball.y = ball.y + ball.speed_y * dt
-
     check_score()
 end
 
+
 function love.draw()
-    love.graphics.setNewFont(30)
-    love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 30, 10)
     love.graphics.rectangle("fill", player.x, player.y, 20, 50)
-    love.graphics.rectangle("fill", player2.x2, player2.y2, 20, 50)
+    love.graphics.rectangle("fill", player2.x, player2.y, 20, 50)
     love.graphics.rectangle("line", 50, 20, 700, 550)
     love.graphics.circle("fill", ball.x, ball.y, ball.size)
+    love.graphics.setNewFont(30)
     love.graphics.printf(tostring(player2.score), 350, 40, 100, "left")
     love.graphics.printf("|", 350, 40, 100, "center")
     love.graphics.printf(tostring(player.score), 350, 40, 100, "right")
+    drawfps()
 end
 
 
