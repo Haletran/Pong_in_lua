@@ -33,17 +33,17 @@ end
 
 function movePlayer1(dt)
     if ball.y < player.y then
-        player.y = player.y - player.speed * dt
+        player.y = math.max(player.y - player.speed * dt, 20)
     elseif ball.y > player.y then
-        player.y = player.y + player.speed * dt
+        player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 80)
     end
 end
 
 function movePlayer2(dt)
     if ball.y < player2.y2 then
-        player2.y2 = player2.y2 - player2.speed * dt
+        player2.y2 = math.max(player2.y2 - player2.speed * dt, 20)
     elseif ball.y > player2.y2 then
-        player2.y2 = player2.y2 + player2.speed * dt
+        player2.y2 = math.min(player2.y2 + player2.speed * dt, love.graphics.getHeight() - 80)
     end
 end
 
