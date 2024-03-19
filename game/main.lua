@@ -22,10 +22,10 @@ function love.load()
         speed_x = 300,
         speed_y = 300,
     }
-    pong = love.audio.newSource("ping.mp3", "static")
-    success = love.audio.newSource("score.mp3", "static")
+    pong = love.audio.newSource("sound/ping.mp3", "static")
+    success = love.audio.newSource("sound/score.mp3", "static")
     fps = love.timer.getFPS()
-    check = 0
+    bot = 1
 end
 
 function checkCollisionRectCircle(rx, ry, rw, rh, cx, cy, cr)
@@ -48,7 +48,7 @@ end
 
 
 function movePlayer1(dt)
-    if check == 0 then
+    if bot == 1 then
         if ball.y < player.y then
             player.y = math.max(player.y - player.speed * dt, 20)
         elseif ball.y > player.y then
@@ -72,6 +72,7 @@ function check_score()
         ball.x = 400
         ball.y = 300
         speed_x = 1
+        speed_y = 1
     elseif ball.x > 800 then
         success:play()
         player2.score = player2.score + 1
