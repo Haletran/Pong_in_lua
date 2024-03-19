@@ -22,6 +22,7 @@ function love.load()
     }
     pong = love.audio.newSource("ping.mp3", "static")
     success = love.audio.newSource("score.mp3", "static")
+    fps = love.timer.getFPS()
 end
 
 function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
@@ -53,18 +54,21 @@ function check_score()
         player.score  = player.score + 1
         ball.x = 400
         ball.y = 300
+        speed_x = 1
     elseif ball.x > 800 then
         success:play()
         player2.score = player2.score + 1
         ball.x = 400
         ball.y = 300
+        speed_y = 1
+        speed_x = 1
     end
 end
 
 function love.update(dt)
 
     movePlayer1(dt)
-    -- movePlayer2(dt)
+    --movePlayer2(dt)
     if love.keyboard.isDown("w") then
         player2.y2 = math.max(player2.y2 - player2.speed * dt, 20)
     elseif love.keyboard.isDown("s") then
@@ -84,13 +88,13 @@ function love.update(dt)
 
     if ball.y < 20 or ball.y > love.graphics.getHeight() - ball.size - 30 then
         pong:play()
-        ball.speed_y = -ball.speed_y
+        ball.speed_y = -ball.speed_y - 1
     end
 
     if checkCollision(ball.x, ball.y, ball.size, ball.size, player.x, player.y, 20, 50) or
        checkCollision(ball.x, ball.y, ball.size, ball.size, player2.x2, player2.y2, 20, 50) then
         pong:play()
-        ball.speed_x = -ball.speed_x
+        ball.speed_x = -ball.speed_x - 1
     end
 
     ball.x = ball.x + ball.speed_x * dt
@@ -100,11 +104,14 @@ function love.update(dt)
 end
 
 function love.draw()
+    love.graphics.setNewFont(30)
+    love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 30, 10)
     love.graphics.rectangle("fill", player.x, player.y, 20, 50)
     love.graphics.rectangle("fill", player2.x2, player2.y2, 20, 50)
     love.graphics.rectangle("line", 50, 20, 700, 550)
     love.graphics.circle("fill", ball.x, ball.y, ball.size)
     love.graphics.printf(tostring(player2.score), 350, 40, 100, "left")
+    love.graphics.printf("|", 350, 40, 100, "center")
     love.graphics.printf(tostring(player.score), 350, 40, 100, "right")
 end
 
