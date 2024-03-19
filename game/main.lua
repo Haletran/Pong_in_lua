@@ -25,20 +25,35 @@ function love.load()
     pong = love.audio.newSource("ping.mp3", "static")
     success = love.audio.newSource("score.mp3", "static")
     fps = love.timer.getFPS()
+    check = 0
 end
 
-function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
-    return x1 < x2 + w2 - 1 and
-           x2 < x1 + w1 - 1 and
-           y1 < y2 + h2 - 1 and
-           y2 < y1 + h1 - 1
+function checkCollisionRectCircle(rx, ry, rw, rh, cx, cy, cr)
+    local closestX = clamp(cx, rx, rx + rw)
+    local closestY = clamp(cy, ry, ry + rh)
+    local distanceX = cx - closestX
+    local distanceY = cy - closestY
+    return (distanceX * distanceX + distanceY * distanceY) <= (cr * cr)
 end
+
+function clamp(value, min, max)
+    if value < min then
+        return min
+    elseif value > max then
+        return max
+    else
+        return value
+    end
+end
+
 
 function movePlayer1(dt)
-    if ball.y < player.y then
-        player.y = math.max(player.y - player.speed * dt, 20)
-    elseif ball.y > player.y then
-        player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 80)
+    if check == 0 then
+        if ball.y < player.y then
+            player.y = math.max(player.y - player.speed * dt, 20)
+        elseif ball.y > player.y then
+            player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 80)
+        end
     end
 end
 
@@ -67,8 +82,15 @@ function check_score()
     end
 end
 
-function love.update(dt)
+function check_button(x, y)
+    if x == 5  and y == 700 then
+        check = 1
+    end
+end
 
+function love.update(dt)
+    local mouse_x, mouse_y = love.mouse.getPosition()
+    check_button(mouse_x, mouse_y)
     movePlayer1(dt)
     --movePlayer2(dt)
     if love.keyboard.isDown("w") then
@@ -93,8 +115,8 @@ function love.update(dt)
         ball.speed_y = -ball.speed_y - 1
     end
 
-    if checkCollision(ball.x, ball.y, ball.size, ball.size, player.x, player.y, 20, 50) or
-       checkCollision(ball.x, ball.y, ball.size, ball.size, player2.x, player2.y, 20, 50) then
+    if checkCollisionRectCircle(player.x, player.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) or
+       checkCollisionRectCircle(player2.x, player2.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) then
         pong:play()
         ball.speed_x = -ball.speed_x - 1
     end
@@ -103,6 +125,7 @@ function love.update(dt)
     ball.y = ball.y + ball.speed_y * dt
     check_score()
 end
+
 
 
 function love.draw()
