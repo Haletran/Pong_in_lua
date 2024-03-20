@@ -134,5 +134,3 @@ function love.draw()
     love.graphics.circle("fill", ball.x, ball.y, ball.size)
 end
 
-
-
