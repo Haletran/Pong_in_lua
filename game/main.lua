@@ -68,17 +68,17 @@ function resetBall()
 end
 
 function check_score()
-    if ball.x < 20 or ball.x > love.graphics.getWidth() - ball.size - 30 then
-        resetBall()
         if ball.x < 20 then
             success:play()
             player2.score = player2.score + 1
-        else
+            resetBall()
+        elseif ball.x > love.graphics.getWidth() - ball.size - 30 then
             success:play()
             player.score = player.score + 1
+            resetBall()
         end
     end
-end
+
 
 
 function love.update(dt)
@@ -117,8 +117,8 @@ function love.update(dt)
 end
 
 
-
 function love.draw()
+    --love.graphics.setColor(love.math.colorFromBytes(128, 234, 255))
     love.graphics.rectangle("fill", player.x, player.y, 20, 50)
     love.graphics.rectangle("fill", player2.x, player2.y, 20, 50)
     love.graphics.rectangle("line", 50, 20, 700, 550)
