@@ -5,14 +5,14 @@ function love.load()
         x = 730,
         y = 500,
         size = 25,
-        speed = 400,
+        speed = 500,
         score = 0
     }
     player2 = {
         x = 50,
         y = 100,
         size = 25,
-        speed = 400,
+        speed = 500,
         score = 0
     }
     ball = {
@@ -21,7 +21,7 @@ function love.load()
         size = 10,
         speed_x = 200,
         speed_y = 200,
-        color = {love.math.colorFromBytes(255, 0, 0)}
+        color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
     }
     pong = love.audio.newSource("sound/ping.mp3", "static")
     success = love.audio.newSource("sound/score.mp3", "static")
