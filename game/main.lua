@@ -26,7 +26,7 @@ function love.load()
     pong = love.audio.newSource("sound/ping.mp3", "static")
     success = love.audio.newSource("sound/score.mp3", "static")
     fps = love.timer.getFPS()
-    bot = 0
+    bot = 1
     
 end
 
@@ -105,7 +105,7 @@ function love.update(dt)
     if checkCollisionRectCircle(player.x, player.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) or
     checkCollisionRectCircle(player2.x, player2.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) then
         pong:play()
-        ball.speed_x = -ball.speed_x * 1.1
+        ball.speed_x = -ball.speed_x * .1
         ball.color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
     end
 
@@ -121,6 +121,7 @@ end
 
 
 function love.draw()
+    love.graphics.setBackgroundColor({love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))})
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
     love.graphics.rectangle("fill", player.x, player.y, 20, 50)
     love.graphics.rectangle("fill", player2.x, player2.y, 20, 50)
