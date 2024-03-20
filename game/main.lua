@@ -27,6 +27,7 @@ function love.load()
     success = love.audio.newSource("sound/score.mp3", "static")
     fps = love.timer.getFPS()
     bot = 1
+    disco = 0
     
 end
 
@@ -72,11 +73,11 @@ end
 function check_score()
         if ball.x < 20 then
             success:play()
-            player2.score = player2.score + 1
+            player.score = player.score + 1
             resetBall()
         elseif ball.x > love.graphics.getWidth() - ball.size - 30 then
             success:play()
-            player.score = player.score + 1
+            player2.score = player2.score + 1
             resetBall()
         end
     end
@@ -84,7 +85,7 @@ function check_score()
 
 
 function love.update(dt)
-    movePlayer1(dt)
+    --movePlayer1(dt)
     if love.keyboard.isDown("w") then
         player2.y = math.max(player2.y - player2.speed * dt, 20)
     elseif love.keyboard.isDown("s") then
@@ -105,7 +106,7 @@ function love.update(dt)
     if checkCollisionRectCircle(player.x, player.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) or
     checkCollisionRectCircle(player2.x, player2.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) then
         pong:play()
-        ball.speed_x = -ball.speed_x * .1
+        ball.speed_x = -ball.speed_x * 1.1
         ball.color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
     end
 
@@ -121,7 +122,11 @@ end
 
 
 function love.draw()
-    love.graphics.setBackgroundColor({love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))})
+    if disco == 1 then
+        love.graphics.setBackgroundColor({love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))})
+    else
+        love.graphics.setBackgroundColor(love.math.colorFromBytes(32, 32, 238))
+    end
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
     love.graphics.rectangle("fill", player.x, player.y, 20, 50)
     love.graphics.rectangle("fill", player2.x, player2.y, 20, 50)
