@@ -39,7 +39,8 @@ function checkCollisionRectRect(rect1_x, rect1_y, rect1_width, rect1_height, rec
     return rect1_x < rect2_x + rect2_width and
            rect1_x + rect1_width > rect2_x and
            rect1_y < rect2_y + rect2_height and
-           rect1_y + rect1_height > rect2_y
+           rect1_y + rect1_height > rect2_y and
+           not (rect1_x + rect1_width < rect2_x or rect1_x > rect2_x + rect2_width or rect1_y + rect1_height < rect2_y or rect1_y > rect2_y + rect2_height)
 end
 
 function movePlayer1(dt)
