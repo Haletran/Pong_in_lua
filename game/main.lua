@@ -36,11 +36,12 @@ function love.load()
 end
 
 function checkCollisionRectRect(rect1_x, rect1_y, rect1_width, rect1_height, rect2_x, rect2_y, rect2_width, rect2_height)
-    return rect1_x < rect2_x + rect2_width and
-           rect1_x + rect1_width > rect2_x and
-           rect1_y < rect2_y + rect2_height and
-           rect1_y + rect1_height > rect2_y and
-           not (rect1_x + rect1_width < rect2_x or rect1_x > rect2_x + rect2_width or rect1_y + rect1_height < rect2_y or rect1_y > rect2_y + rect2_height)
+    local dx = rect2_x - (rect1_x + rect1_width)
+    local dy = rect2_y - (rect1_y + rect1_height)
+    local dw = (rect2_x + rect2_width) - rect1_x
+    local dh = (rect2_y + rect2_height) - rect1_y
+
+    return dx <= 0 and dy <= 0 and dw >= 0 and dh >= 0
 end
 
 function movePlayer1(dt)
