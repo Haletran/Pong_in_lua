@@ -4,21 +4,24 @@ function love.load()
     player = {
         x = 730,
         y = 500,
-        size = 25,
+        width = 20,
+        height = 50,
         speed = 500,
         score = 0
     }
     player2 = {
         x = 50,
         y = 100,
-        size = 25,
+        width = 20,
+        height = 50,
         speed = 500,
         score = 0
     }
     ball = {
-        x = 400,
-        y = 300,
-        size = 10,
+        x = 390,
+        y = 290,
+        width = 20,
+        height = 20,
         speed_x = 200,
         speed_y = 200,
         color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
@@ -28,22 +31,16 @@ function love.load()
     fps = love.timer.getFPS()
     bot = 1
     disco = 0
+    input = 0
     
 end
 
-function checkCollisionRectCircle(rx, ry, rw, rh, cx, cy, cr)
-    local closestX = clamp(cx, rx, rx + rw)
-    local closestY = clamp(cy, ry, ry + rh)
-    local distanceX = cx - closestX
-    local distanceY = cy - closestY
-    return (distanceX * distanceX + distanceY * distanceY) <= (cr * cr)
+function checkCollisionRectRect(rect1_x, rect1_y, rect1_width, rect1_height, rect2_x, rect2_y, rect2_width, rect2_height)
+    return rect1_x < rect2_x + rect2_width and
+           rect1_x + rect1_width > rect2_x and
+           rect1_y < rect2_y + rect2_height and
+           rect1_y + rect1_height > rect2_y
 end
-
-function clamp(value, min, max)
-    return math.max(min, math.min(value, max))
-end
-
-
 
 function movePlayer1(dt)
     if bot == 1 then
@@ -66,26 +63,24 @@ end
 function resetBall()
     ball.x = 400
     ball.y = 300
-    ball.speed_x = 300
-    ball.speed_y = 300
+    ball.speed_x = 200
+    ball.speed_y = 200
+    love.timer.sleep(0.1)
 end
 
 function check_score()
-        if ball.x < 20 then
-            success:play()
-            player.score = player.score + 1
-            resetBall()
-        elseif ball.x > love.graphics.getWidth() - ball.size - 30 then
-            success:play()
-            player2.score = player2.score + 1
-            resetBall()
-        end
+    if ball.x < 40 then
+        success:play()
+        player.score = player.score + 1
+        resetBall()
+    elseif ball.x > love.graphics.getWidth() - ball.width - 40 then
+        success:play()
+        player2.score = player2.score + 1
+        resetBall()
     end
-
-
+end
 
 function love.update(dt)
-    --movePlayer1(dt)
     if love.keyboard.isDown("w") then
         player2.y = math.max(player2.y - player2.speed * dt, 20)
     elseif love.keyboard.isDown("s") then
@@ -95,6 +90,11 @@ function love.update(dt)
     if love.keyboard.isDown("r") then
         player.score = 0
         player2.score = 0
+        disco = 0
+    end
+
+    if love.keyboard.isDown("d") then
+        disco = 1
     end
 
     if love.keyboard.isDown("up") then
@@ -103,16 +103,16 @@ function love.update(dt)
         player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 80)
     end
 
-    if checkCollisionRectCircle(player.x, player.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) or
-    checkCollisionRectCircle(player2.x, player2.y, 20, 50, ball.x + ball.size / 2, ball.y + ball.size / 2, ball.size / 2) then
+    if checkCollisionRectRect(player.x, player.y, player.width, player.height, ball.x, ball.y, ball.width, ball.height) or
+       checkCollisionRectRect(player2.x, player2.y, player2.width, player2.height, ball.x, ball.y, ball.width, ball.height) then
         pong:play()
         ball.speed_x = -ball.speed_x * 1.1
         ball.color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
     end
 
-    if ball.y < 21 or ball.y > love.graphics.getHeight() - ball.size - 31 then
+    if ball.y < 20 or ball.y > love.graphics.getHeight() - ball.height - 31 then
         pong:play()
-        ball.speed_y = -ball.speed_y * 1.1
+        ball.speed_y = -ball.speed_y
     end
 
     ball.x = ball.x + ball.speed_x * dt
@@ -120,16 +120,15 @@ function love.update(dt)
     check_score()
 end
 
-
 function love.draw()
     if disco == 1 then
         love.graphics.setBackgroundColor({love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))})
     else
-        love.graphics.setBackgroundColor(love.math.colorFromBytes(32, 32, 238))
+        love.graphics.setBackgroundColor(love.math.colorFromBytes(0, 0, 0))
     end
     love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-    love.graphics.rectangle("fill", player.x, player.y, 20, 50)
-    love.graphics.rectangle("fill", player2.x, player2.y, 20, 50)
+    love.graphics.rectangle("fill", player.x, player.y, player.width, player.height)
+    love.graphics.rectangle("fill", player2.x, player2.y, player2.width, player2.height)
     love.graphics.rectangle("line", 50, 20, 700, 550)
     love.graphics.rectangle("line", 400, 20, 1, 550)
     love.graphics.setNewFont(30)
@@ -137,6 +136,6 @@ function love.draw()
     love.graphics.printf(tostring(player.score), 350, 40, 100, "right")
     drawfps()
     love.graphics.setColor(ball.color)
-    love.graphics.circle("fill", ball.x, ball.y, ball.size)
+    love.graphics.rectangle("fill", ball.x, ball.y, ball.width, ball.height)
 end
 
