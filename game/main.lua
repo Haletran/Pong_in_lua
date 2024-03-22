@@ -20,8 +20,8 @@ function love.load()
     ball = {
         x = 390,
         y = 290,
-        width = 20,
-        height = 20,
+        width = 10,
+        height = 10,
         speed_x = 200,
         speed_y = 200,
         color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
@@ -36,19 +36,19 @@ function love.load()
 end
 
 function checkCollisionRectRect(rect1_x, rect1_y, rect1_width, rect1_height, rect2_x, rect2_y, rect2_width, rect2_height)
-    return rect1_x < rect2_x + rect2_width and
-           rect1_x + rect1_width > rect2_x and
+    return rect1_x < rect2_x + rect2_width / 2 and
+           rect1_x + rect1_width / 2 > rect2_x and
            rect1_y < rect2_y + rect2_height and
-           rect1_y + rect1_height > rect2_y and
-           not (rect1_x + rect1_width < rect2_x or rect1_x > rect2_x + rect2_width or rect1_y + rect1_height < rect2_y or rect1_y > rect2_y + rect2_height)
+           rect1_y + rect1_height > rect2_y
 end
+
 
 function movePlayer1(dt)
     if bot == 1 then
         if ball.y < player.y then
             player.y = math.max(player.y - player.speed * dt, 20)
         elseif ball.y > player.y then
-            player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 80)
+            player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 110)
         end
     end
 end
@@ -57,7 +57,7 @@ function movePlayer2(dt)
     if ball.y < player2.y then
         player2.y = math.max(player2.y - player2.speed * dt, 20)
     elseif ball.y > player2.y then
-        player2.y = math.min(player2.y + player2.speed * dt, love.graphics.getHeight() - 80)
+        player2.y = math.min(player2.y + player2.speed * dt, love.graphics.getHeight() - 110)
     end
 end
 
@@ -66,15 +66,17 @@ function resetBall()
     ball.y = 300
     ball.speed_x = 200
     ball.speed_y = 200
+    ball.width = 10
+    ball.height = 10
     love.timer.sleep(0.1)
 end
 
 function check_score()
-    if ball.x < 40 then
+    if ball.x < 20 then
         success:play()
         player.score = player.score + 1
         resetBall()
-    elseif ball.x > love.graphics.getWidth() - ball.width - 40 then
+    elseif ball.x > love.graphics.getWidth() - ball.width - 20 then
         success:play()
         player2.score = player2.score + 1
         resetBall()
@@ -82,6 +84,7 @@ function check_score()
 end
 
 function love.update(dt)
+    --movePlayer1(dt)
     if love.keyboard.isDown("w") then
         player2.y = math.max(player2.y - player2.speed * dt, 20)
     elseif love.keyboard.isDown("s") then
@@ -107,8 +110,17 @@ function love.update(dt)
     if checkCollisionRectRect(player.x, player.y, player.width, player.height, ball.x, ball.y, ball.width, ball.height) or
        checkCollisionRectRect(player2.x, player2.y, player2.width, player2.height, ball.x, ball.y, ball.width, ball.height) then
         pong:play()
+        input = 1
         ball.speed_x = -ball.speed_x * 1.1
         ball.color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
+    end
+
+    if input == 1 then
+        if ball.width and ball.height < 60 then
+            ball.width = ball.width * 1.1
+            ball.height = ball.height * 1.1
+        end
+        input = 0
     end
 
     if ball.y < 20 or ball.y > love.graphics.getHeight() - ball.height - 30 then
