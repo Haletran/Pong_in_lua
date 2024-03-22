@@ -90,7 +90,7 @@ Module.expectedDataFileDownloads++;
       function assert(check, msg) {
         if (!check) throw msg + new Error().stack;
       }
-      
+      Module['FS_createPath']('/', 'sound', true, true);
 
       function DataRequest(start, end, crunched, audio) {
         this.start = start;
@@ -284,6 +284,6 @@ Module.expectedDataFileDownloads++;
     }
 
   }
-  loadPackage({"package_uuid":"464c7f91-4724-4dd6-98a1-ef8c6fac3a8a","remote_package_size":18612,"files":[{"filename":"/game.love","crunched":0,"start":0,"end":18612,"audio":false}]});
+  loadPackage({"package_uuid":"be869013-57db-4cba-b5fa-58a2f38651ff","remote_package_size":25937,"files":[{"filename":"/conf.lua","crunched":0,"start":0,"end":60,"audio":false},{"filename":"/main.lua","crunched":0,"start":60,"end":4642,"audio":false},{"filename":"/menu.lua","crunched":0,"start":4642,"end":4885,"audio":false},{"filename":"/sound/ping.mp3","crunched":0,"start":4885,"end":13971,"audio":true},{"filename":"/sound/score.mp3","crunched":0,"start":13971,"end":25937,"audio":true}]});
 
 })();
