@@ -1,19 +1,19 @@
-require("menu")
+require("info_on_screen")
 
 function love.load()
     player = {
-        x = 730,
-        y = 500,
-        width = 20,
-        height = 50,
+        x = 740,
+        y = 260,
+        width = 10,
+        height = 80,
         speed = 500,
         score = 0
     }
     player2 = {
         x = 50,
-        y = 100,
-        width = 20,
-        height = 50,
+        y = 230,
+        width = 10,
+        height = 80,
         speed = 500,
         score = 0
     }
@@ -85,7 +85,7 @@ function love.update(dt)
     if love.keyboard.isDown("w") then
         player2.y = math.max(player2.y - player2.speed * dt, 20)
     elseif love.keyboard.isDown("s") then
-        player2.y = math.min(player2.y + player2.speed * dt, love.graphics.getHeight() - 80)
+        player2.y = math.min(player2.y + player2.speed * dt, love.graphics.getHeight() - 110)
     end
 
     if love.keyboard.isDown("r") then
@@ -101,7 +101,7 @@ function love.update(dt)
     if love.keyboard.isDown("up") then
         player.y = math.max(player.y - player.speed * dt, 20)
     elseif love.keyboard.isDown("down") then
-        player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 80)
+        player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 110)
     end
 
     if checkCollisionRectRect(player.x, player.y, player.width, player.height, ball.x, ball.y, ball.width, ball.height) or
@@ -111,7 +111,7 @@ function love.update(dt)
         ball.color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
     end
 
-    if ball.y < 20 or ball.y > love.graphics.getHeight() - ball.height - 31 then
+    if ball.y < 20 or ball.y > love.graphics.getHeight() - ball.height - 30 then
         pong:play()
         ball.speed_y = -ball.speed_y
     end
