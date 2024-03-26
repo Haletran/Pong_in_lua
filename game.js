@@ -284,6 +284,6 @@ Module.expectedDataFileDownloads++;
     }
 
   }
-  loadPackage({"package_uuid":"c88097bb-b580-458c-b804-e1da69028ba3","remote_package_size":28060,"files":[{"filename":"/conf.lua","crunched":0,"start":0,"end":60,"audio":false},{"filename":".lua","crunched":0,"start":60,"end":4480,"audio":false},{"filename":"/info_on_screen.lua","crunched":0,"start":4480,"end":4932,"audio":false},{"filename":"/main.lua","crunched":0,"start":4932,"end":7008,"audio":false},{"filename":"/sound/ping.mp3","crunched":0,"start":7008,"end":16094,"audio":true},{"filename":"/sound/score.mp3","crunched":0,"start":16094,"end":28060,"audio":true}]});
+  loadPackage({"package_uuid":"133d6d7c-5ab4-4494-80a1-35a4dda62dda","remote_package_size":28055,"files":[{"filename":"conf.lua","crunched":0,"start":0,"end":60,"audio":false},{"filename":"game.lua","crunched":0,"start":60,"end":4480,"audio":false},{"filename":"info_on_screen.lua","crunched":0,"start":4480,"end":4932,"audio":false},{"filename":"main.lua","crunched":0,"start":4932,"end":7003,"audio":false},{"filename":"sound/ping.mp3","crunched":0,"start":7003,"end":16089,"audio":true},{"filename":"sound/score.mp3","crunched":0,"start":16089,"end":28055,"audio":true}]});
 
 })();
