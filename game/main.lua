@@ -1,4 +1,4 @@
-require("game/game")
+require("game")
 
 menus = { { "One Player", "Two Player", "Quit" } }
 
