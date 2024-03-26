@@ -1,6 +1,10 @@
-require("info_on_screen")
+require("game/game")
+
+menus = { { "One Player", "Two Player", "Quit" } }
 
 function love.load()
+    current_menu = 1
+    current_item = 1
     player = {
         x = 740,
         y = 260,
@@ -24,131 +28,61 @@ function love.load()
         height = 10,
         speed_x = 200,
         speed_y = 200,
-        color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
+        color = { love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255)) }
     }
     pong = love.audio.newSource("sound/ping.mp3", "static")
     success = love.audio.newSource("sound/score.mp3", "static")
     fps = love.timer.getFPS()
-    bot = 1
+    bot = 0
     disco = 0
     input = 0
-    
+    bigger = 0
 end
 
-function checkCollisionRectRect(rect1_x, rect1_y, rect1_width, rect1_height, rect2_x, rect2_y, rect2_width, rect2_height)
-    return rect1_x < rect2_x + rect2_width / 2 and
-           rect1_x + rect1_width / 2 > rect2_x and
-           rect1_y < rect2_y + rect2_height and
-           rect1_y + rect1_height > rect2_y
+function draw_title()
+    love.graphics.print("Pong", 400, 50)
 end
 
-
-function movePlayer1(dt)
-    if bot == 1 then
-        if ball.y < player.y then
-            player.y = math.max(player.y - player.speed * dt, 20)
-        elseif ball.y > player.y then
-            player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 110)
+function love.draw()
+    love.graphics.setColor(255, 255, 255)
+    draw_title()
+    for i, v in ipairs(menus[current_menu]) do
+        if i == current_item then
+            love.graphics.setColor(255, 0, 0)
+        else
+            love.graphics.setColor(255, 255, 255)
         end
+        love.graphics.print(v, 100, 100 + i * 20)
     end
 end
 
-function movePlayer2(dt)
-    if ball.y < player2.y then
-        player2.y = math.max(player2.y - player2.speed * dt, 20)
-    elseif ball.y > player2.y then
-        player2.y = math.min(player2.y + player2.speed * dt, love.graphics.getHeight() - 110)
-    end
-end
-
-function resetBall()
-    ball.x = 400
-    ball.y = 300
-    ball.speed_x = 200
-    ball.speed_y = 200
-    ball.width = 10
-    ball.height = 10
-    love.timer.sleep(0.1)
-end
-
-function check_score()
-    if ball.x < 20 then
-        success:play()
-        player.score = player.score + 1
-        resetBall()
-    elseif ball.x > love.graphics.getWidth() - ball.width - 20 then
-        success:play()
-        player2.score = player2.score + 1
-        resetBall()
+function menu_choose(current_item)
+    if current_item == 1 then
+        bot = 1
+        start_game()
+    elseif current_item == 2 then
+        start_game()
+    elseif current_item == 3 then
+        love.event.quit()
     end
 end
 
 function love.update(dt)
-    --movePlayer1(dt)
     if love.keyboard.isDown("w") then
-        player2.y = math.max(player2.y - player2.speed * dt, 20)
-    elseif love.keyboard.isDown("s") then
-        player2.y = math.min(player2.y + player2.speed * dt, love.graphics.getHeight() - 110)
-    end
-
-    if love.keyboard.isDown("r") then
-        player.score = 0
-        player2.score = 0
-        disco = 0
-    end
-
-    if love.keyboard.isDown("d") then
-        disco = 1
-    end
-
-    if love.keyboard.isDown("up") then
-        player.y = math.max(player.y - player.speed * dt, 20)
-    elseif love.keyboard.isDown("down") then
-        player.y = math.min(player.y + player.speed * dt, love.graphics.getHeight() - 110)
-    end
-
-    if checkCollisionRectRect(player.x, player.y, player.width, player.height, ball.x, ball.y, ball.width, ball.height) or
-       checkCollisionRectRect(player2.x, player2.y, player2.width, player2.height, ball.x, ball.y, ball.width, ball.height) then
-        pong:play()
-        input = 1
-        ball.speed_x = -ball.speed_x * 1.1
-        ball.color = {love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))}
-    end
-
-    if input == 1 then
-        if ball.width and ball.height < 60 then
-            ball.width = ball.width * 1.1
-            ball.height = ball.height * 1.1
+        current_item = current_item - 1
+        if current_item < 1 then
+            current_item = #menus[current_menu]
         end
-        input = 0
-    end
-
-    if ball.y < 20 or ball.y > love.graphics.getHeight() - ball.height - 30 then
-        pong:play()
-        ball.speed_y = -ball.speed_y
-    end
-
-    ball.x = ball.x + ball.speed_x * dt
-    ball.y = ball.y + ball.speed_y * dt
-    check_score()
-end
-
-function love.draw()
-    if disco == 1 then
-        love.graphics.setBackgroundColor({love.math.colorFromBytes(love.math.random(0, 255), love.math.random(0, 255), love.math.random(0, 255))})
+        love.timer.sleep(0.2)
+    elseif love.keyboard.isDown("s") then
+        current_item = current_item + 1
+        if current_item > #menus[current_menu] then
+            current_item = 1
+        end
+        love.timer.sleep(0.2)
     else
-        love.graphics.setBackgroundColor(love.math.colorFromBytes(0, 0, 0))
+        if love.keyboard.isDown("return") then
+            menu_choose(current_item)
+        end
     end
-    love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-    love.graphics.rectangle("fill", player.x, player.y, player.width, player.height)
-    love.graphics.rectangle("fill", player2.x, player2.y, player2.width, player2.height)
-    love.graphics.rectangle("line", 50, 20, 700, 550)
-    love.graphics.rectangle("line", 400, 20, 1, 550)
-    love.graphics.setNewFont(30)
-    love.graphics.printf(tostring(player2.score), 350, 40, 100, "left")
-    love.graphics.printf(tostring(player.score), 350, 40, 100, "right")
-    drawfps()
-    love.graphics.setColor(ball.color)
-    love.graphics.rectangle("fill", ball.x, ball.y, ball.width, ball.height)
 end
-
